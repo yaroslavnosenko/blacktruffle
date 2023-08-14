@@ -5,6 +5,7 @@ import { User } from './entities/user.entity'
 import { SignUserInput } from './dto/sign-user.input'
 import { UpdateUserInput } from './dto/update-user.input'
 import { VerifyUserInput } from './dto/verify-user.input'
+import { TokenType } from './entities/token.type'
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -15,7 +16,7 @@ export class UsersResolver {
     return await this.usersService.sign(input)
   }
 
-  @Mutation(() => User, { nullable: true })
+  @Mutation(() => TokenType, { nullable: true })
   async verifyUser(@Args('verifyUserInput') input: VerifyUserInput) {
     return this.usersService.verify(input)
   }

@@ -6,6 +6,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Cache } from 'cache-manager'
 import { generateOTP } from '../utils'
 import { User } from './entities/user.entity'
+import { TokenType } from './entities/token.type'
 
 const CODE_TTL = 60 * 1000
 
@@ -21,14 +22,19 @@ export class UsersService {
     return true
   }
 
-  async verify({ email, code }: VerifyUserInput): Promise<User> {
+  async verify({ email, code }: VerifyUserInput): Promise<TokenType> {
     const otp = await this.cacheManager.get(email)
     if (otp !== code) return null
 
-    const user: User | null = await User.findOneBy({ email })
-    if (user) return user
+    const token = 'TOKEN'
 
-    return this.create({ email })
+    let user: User | null = await User.findOneBy({ email })
+    if (user) {
+      return { user, token }
+    }
+
+    user = await this.create({ email })
+    return { user, token }
   }
 
   async create({ email }: SignUserInput): Promise<User> {
