@@ -9,12 +9,12 @@ export class OffersResolver {
   constructor(private readonly offersService: OffersService) {}
 
   @Mutation(() => Offer)
-  createItem(@Args('createItemInput') input: CreateOfferInput) {
+  createOffer(@Args('createOfferInput') input: CreateOfferInput) {
     return this.offersService.create(input)
   }
 
   @Mutation(() => Offer)
-  updateItem(@Args('updateItemInput') input: UpdateOfferInput) {
+  updateOffer(@Args('updateOfferInput') input: UpdateOfferInput) {
     return this.offersService.update(input)
   }
 }
