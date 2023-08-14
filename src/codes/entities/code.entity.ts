@@ -12,9 +12,10 @@ export class Code extends BaseEntity {
   name: string
 
   @ManyToOne(() => Merchant, (merchant) => merchant.codes)
+  @Field(() => Merchant)
   merchant: Promise<Merchant>
 
   @OneToMany(() => Order, (order) => order.code)
   @Field(() => [Order])
-  orders: Promise<[Order]>
+  orders: Promise<Order[]>
 }

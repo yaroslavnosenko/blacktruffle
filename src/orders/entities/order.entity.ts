@@ -15,6 +15,8 @@ export class Order extends BaseEntity {
   code: Promise<Code>
 
   @Field(() => [Item])
-  @OneToMany(() => Item, (item) => item.order)
-  items: Promise<[Item]>
+  @OneToMany(() => Item, (item) => item.order, {
+    cascade: true,
+  })
+  items: Promise<Item[]>
 }

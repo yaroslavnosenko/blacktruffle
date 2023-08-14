@@ -18,13 +18,13 @@ export class Merchant extends BaseEntity {
 
   @OneToMany(() => Code, (code) => code.merchant)
   @Field(() => [Code])
-  codes: Promise<[Code]>
+  codes: Promise<Code[]>
 
   @OneToMany(() => Offer, (offer) => offer.merchant)
   @Field(() => [Offer])
-  offers: Promise<[Offer]>
+  offers: Promise<Offer[]>
 
   @OneToMany(() => Staff, (staff) => staff.merchant)
   @Field(() => [Staff])
-  staff: Promise<[Staff]>
+  staff: Promise<Staff[]>
 }
