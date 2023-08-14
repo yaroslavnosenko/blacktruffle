@@ -1,8 +1,10 @@
-import { CreateOfferInput } from './create-offer.input'
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql'
+import { InputType, Field, ID } from '@nestjs/graphql'
 
 @InputType()
-export class UpdateOfferInput extends PartialType(CreateOfferInput) {
-  @Field(() => Int)
-  id: number
+export class UpdateOfferInput {
+  @Field(() => ID)
+  id: string
+
+  @Field(() => String, { nullable: true })
+  name?: string
 }

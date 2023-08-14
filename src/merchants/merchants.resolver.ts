@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql'
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
 import { MerchantsService } from './merchants.service'
 import { Merchant } from './entities/merchant.entity'
 import { CreateMerchantInput } from './dto/create-merchant.input'
@@ -9,34 +9,17 @@ export class MerchantsResolver {
   constructor(private readonly merchantsService: MerchantsService) {}
 
   @Mutation(() => Merchant)
-  createMerchant(
-    @Args('createMerchantInput') createMerchantInput: CreateMerchantInput,
-  ) {
-    return this.merchantsService.create(createMerchantInput)
+  createMerchant(@Args('createMerchantInput') input: CreateMerchantInput) {
+    return this.merchantsService.create(input)
   }
 
-  @Query(() => [Merchant], { name: 'merchants' })
-  findAll() {
-    return this.merchantsService.findAll()
-  }
-
-  @Query(() => Merchant, { name: 'merchant' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  @Query(() => Merchant, { name: 'merchant', nullable: true })
+  findOne(@Args('id', { type: () => ID }) id: string) {
     return this.merchantsService.findOne(id)
   }
 
   @Mutation(() => Merchant)
-  updateMerchant(
-    @Args('updateMerchantInput') updateMerchantInput: UpdateMerchantInput,
-  ) {
-    return this.merchantsService.update(
-      updateMerchantInput.id,
-      updateMerchantInput,
-    )
-  }
-
-  @Mutation(() => Merchant)
-  removeMerchant(@Args('id', { type: () => Int }) id: number) {
-    return this.merchantsService.remove(id)
+  updateMerchant(@Args('updateMerchantInput') input: UpdateMerchantInput) {
+    return this.merchantsService.update(input)
   }
 }

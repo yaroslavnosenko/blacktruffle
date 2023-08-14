@@ -1,7 +1,10 @@
-import { InputType, Int, Field } from '@nestjs/graphql'
+import { InputType, ID, Field } from '@nestjs/graphql'
 
 @InputType()
 export class CreateOfferInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number
+  @Field(() => ID)
+  merchantId: string
+
+  @Field(() => String)
+  name: string
 }
