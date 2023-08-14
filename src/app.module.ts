@@ -13,19 +13,11 @@ import { OrdersModule } from './orders/orders.module'
 import { MerchantsModule } from './merchants/merchants.module'
 import { StaffModule } from './staff/staff.module'
 import { GraphQLError, GraphQLFormattedError } from 'graphql'
+import { DatabaseConfig } from './database/database.config'
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'dev',
-      password: 'dev',
-      database: 'truffle',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(DatabaseConfig()),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
