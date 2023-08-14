@@ -12,6 +12,7 @@ import { OffersModule } from './offers/offers.module'
 import { OrdersModule } from './orders/orders.module'
 import { MerchantsModule } from './merchants/merchants.module'
 import { StaffModule } from './staff/staff.module'
+import { GraphQLError, GraphQLFormattedError } from 'graphql'
 
 @Module({
   imports: [
@@ -28,6 +29,13 @@ import { StaffModule } from './staff/staff.module'
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
+      formatError: (error: GraphQLError) => {
+        const graphQLFormattedError: GraphQLFormattedError = {
+          message:
+            (error.extensions['originalError'] as string) || error.message,
+        }
+        return graphQLFormattedError
+      },
     }),
     UsersModule,
     CodesModule,
