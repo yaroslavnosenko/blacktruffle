@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { SignUserInput } from './dto/sign-user.input'
 import { UpdateUserInput } from './dto/update-user.input'
 import { VerifyUserInput } from './dto/verify-user.input'
@@ -13,18 +13,19 @@ const CODE_TTL = 60 * 1000
 export class UsersService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-  async sign({ email }: SignUserInput) {
+  async sign({ email }: SignUserInput): Promise<boolean> {
     const otp = generateOTP()
     await this.cacheManager.set(email, otp, CODE_TTL)
     // send mail
     console.log(otp)
+    return true
   }
 
   async verify({ email, code }: VerifyUserInput): Promise<User> {
     const otp = await this.cacheManager.get(email)
     if (otp !== code) return null
 
-    const user: User | null = await this.findOneByEmail(email)
+    const user: User | null = await User.findOneBy({ email })
     if (user) return user
 
     return this.create({ email })
@@ -38,16 +39,14 @@ export class UsersService {
   async update(input: UpdateUserInput): Promise<User> {
     const { id, ...fileds } = input
     const dbUser = await User.findOneBy({ id })
-    if (!dbUser) return null
+    if (!dbUser) {
+      throw new NotFoundException('User Not Found')
+    }
     const user = User.merge(dbUser, fileds)
     return user.save()
   }
 
-  async findOneByEmail(email: string) {
-    return User.findOneBy({ email })
-  }
-
-  async findOne(id: string) {
+  async findOne(id: string): Promise<User> {
     return User.findOneBy({ id })
   }
 }

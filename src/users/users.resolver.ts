@@ -10,10 +10,9 @@ import { VerifyUserInput } from './dto/verify-user.input'
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
-  @Mutation(() => String)
+  @Mutation(() => Boolean)
   async signUser(@Args('signUserInput') input: SignUserInput) {
-    await this.usersService.sign(input)
-    return 'OK'
+    return await this.usersService.sign(input)
   }
 
   @Mutation(() => User, { nullable: true })
@@ -26,7 +25,7 @@ export class UsersResolver {
     return this.usersService.update(input)
   }
 
-  @Query(() => User)
+  @Query(() => User, { nullable: true })
   user(@Args('id', { type: () => ID }) id: string) {
     return this.usersService.findOne(id)
   }

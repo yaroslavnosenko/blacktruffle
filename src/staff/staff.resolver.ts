@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql'
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
 import { StaffService } from './staff.service'
 import { Staff } from './entities/staff.entity'
 import { CreateStaffInput } from './dto/create-staff.input'
@@ -9,27 +9,17 @@ export class StaffResolver {
   constructor(private readonly staffService: StaffService) {}
 
   @Mutation(() => Staff)
-  createStaff(@Args('createStaffInput') createStaffInput: CreateStaffInput) {
-    return this.staffService.create(createStaffInput)
+  createStaff(@Args('createStaffInput') input: CreateStaffInput) {
+    return this.staffService.create(input)
   }
 
-  @Query(() => [Staff], { name: 'staff' })
-  findAll() {
-    return this.staffService.findAll()
+  @Mutation(() => Staff)
+  updateStaff(@Args('updateStaffInput') input: UpdateStaffInput) {
+    return this.staffService.update(input)
   }
 
-  @Query(() => Staff, { name: 'staff' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  @Query(() => Staff, { name: 'staff', nullable: true })
+  findOne(@Args('id', { type: () => ID }) id: string) {
     return this.staffService.findOne(id)
-  }
-
-  @Mutation(() => Staff)
-  updateStaff(@Args('updateStaffInput') updateStaffInput: UpdateStaffInput) {
-    return this.staffService.update(updateStaffInput.id, updateStaffInput)
-  }
-
-  @Mutation(() => Staff)
-  removeStaff(@Args('id', { type: () => Int }) id: number) {
-    return this.staffService.remove(id)
   }
 }
